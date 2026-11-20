@@ -1,0 +1,20 @@
+import "reflect-metadata";
+import { DataSource } from "typeorm";
+import { env } from "../config/env.js";
+
+export const AppDataSource = new DataSource({
+  type: "postgres",
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+
+  synchronize: false,
+  migrationsRun: true,
+  logging: env.NODE_ENV === "development" ? ["error", "warn", "migration"] : ["error"],
+  poolSize: 10,
+
+  entities: [import.meta.dirname + "/../entities/*.{ts,js}"],
+  migrations: [import.meta.dirname + "/migrations/*.{ts,js}"],
+});
