@@ -154,11 +154,7 @@ src/
 │   └── format-currency.ts
 ├── types/
 │   └── express-session.d.ts
-├── views/
-│   └── ...
-└── public/
-    ├── css/
-    └── js/
+└── views/
 
 views/
 ├── auth/
