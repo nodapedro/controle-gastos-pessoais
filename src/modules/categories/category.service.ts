@@ -1,5 +1,6 @@
 import { AppDataSource } from "../../database/data-source.js";
 import { Category } from "./category.entity.js";
+import { FinancialEntry } from "../financial-entries/financial-entry.entity.js";
 
 export class CategoryError extends Error {
   constructor(
@@ -126,6 +127,7 @@ export async function deleteCategory(
   userId: string,
 ): Promise<boolean> {
   const categoryRepository = AppDataSource.getRepository(Category);
+  const entryRepository = AppDataSource.getRepository(FinancialEntry);
 
   const category = await categoryRepository.findOneBy({
     id,
@@ -136,11 +138,25 @@ export async function deleteCategory(
     return false;
   }
 
+  const entryCount = await entryRepository.countBy({
+    categoryId: id,
+    userId,
+  });
+
+  if (entryCount > 0) {
+    throw new CategoryError(
+      "Cannot delete this category because it has financial entries.",
+      409,
+    );
+  }
+
   try {
     await categoryRepository.remove(category);
     return true;
   } catch (error) {
-    if (getPostgresErrorCode(error) === "23503") {
+    const code = getPostgresErrorCode(error);
+
+    if (code === "23001" || code === "23503") {
       throw new CategoryError(
         "Cannot delete this category because it has financial entries.",
         409,

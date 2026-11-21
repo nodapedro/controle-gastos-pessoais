@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= editing ? "Editar lançamento" : "Novo lançamento" %></title>
+</head>
+<body>
+    <h1>
+        <%= editing ? "Editar lançamento" : "Novo lançamento" %>
+    </h1>
+
+    <% if (error) { %>
+        <p style="color: red;" role="alert"><%= error %></p>
+    <% } %>
+
+    <% if (categories.length === 0) { %>
+
+        <p>
+            Você precisa cadastrar uma categoria antes de criar um lançamento.
+        </p>
+
+        <a href="/categories/new">Cadastrar categoria</a>
+
+    <% } else { %>
+
+        <form action="<%= formAction %>" method="POST">
+
+            <div>
+                <label for="description">Descrição</label>
+
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    value="<%= description %>"
+                    maxlength="160"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="amount">Valor (R$)</label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    value="<%= amount %>"
+                    min="0.01"
+                    max="9999999999.99"
+                    step="0.01"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="entryDate">Data</label>
+
+                <input
+                    type="date"
+                    id="entryDate"
+                    name="entryDate"
+                    value="<%= entryDate %>"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="entryType">Tipo</label>
+
+                <select
+                    id="entryType"
+                    name="entryType"
+                    required
+                >
+                    <option
+                        value="expense"
+                        <%= entryType === "expense" ? "selected" : "" %>
+                    >
+                        Despesa
+                    </option>
+
+                    <option
+                        value="income"
+                        <%= entryType === "income" ? "selected" : "" %>
+                    >
+                        Receita
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label for="categoryId">Categoria</label>
+
+                <select
+                    id="categoryId"
+                    name="categoryId"
+                    required
+                >
+                    <option value="">Selecione uma categoria</option>
+
+                    <% categories.forEach(category => { %>
+                        <option
+                            value="<%= category.id %>"
+                            <%= categoryId === category.id ? "selected" : "" %>
+                        >
+                            <%= category.name %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <button type="submit">
+                <%= editing ? "Salvar alterações" : "Cadastrar lançamento" %>
+            </button>
+
+            <a href="/entries">Cancelar</a>
+
+        </form>
+
+    <% } %>
+</body>
+</html>
