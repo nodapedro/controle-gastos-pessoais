@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório financeiro</title>
+</head>
+<body>
+    <h1>Relatório financeiro</h1>
+
+    <nav>
+        <a href="/">Início</a><br>
+        <a href="/entries">Lançamentos</a><br>
+        <a href="/categories">Categorias</a>
+    </nav>
+
+    <h2>Selecionar período</h2>
+
+    <form action="/reports" method="GET">
+        <div>
+            <label for="from">Data inicial</label>
+            <input
+                type="date"
+                id="from"
+                name="from"
+                value="<%= from %>"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="to">Data final</label>
+            <input
+                type="date"
+                id="to"
+                name="to"
+                value="<%= to %>"
+                min="<%= from %>"
+                required
+            >
+        </div>
+
+        <button type="submit">Gerar relatório</button>
+    </form>
+
+    <% if (error) { %>
+        <p style="color: red;" role="alert">
+            <%= error %>
+        </p>
+    <% } %>
+
+    <% if (!error) { %>
+
+        <h2>Resumo do período</h2>
+
+        <section>
+            <article>
+                <h3>Total de receitas</h3>
+                <p><%= formatCurrency(totals.totalIncome) %></p>
+            </article>
+
+            <article>
+                <h3>Total de despesas</h3>
+                <p><%= formatCurrency(totals.totalExpenses) %></p>
+            </article>
+
+            <article>
+                <h3>Saldo</h3>
+                <p><%= formatCurrency(totals.balance) %></p>
+            </article>
+        </section>
+
+        <h2>Despesas por categoria</h2>
+
+        <% if (categoryExpenses.length === 0) { %>
+
+            <p>Não há despesas registradas neste período.</p>
+
+        <% } else { %>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Total gasto</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% categoryExpenses.forEach(item => { %>
+                        <tr>
+                            <td><%= item.categoryName %></td>
+                            <td><%= formatCurrency(item.total) %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+
+        <% } %>
+
+    <% } %>
+
+</body>
+<script>
+    const fromInput = document.getElementById("from");
+    const toInput = document.getElementById("to");
+
+    function updateEndDateMinimum() {
+        toInput.min = fromInput.value;
+    }
+
+    fromInput.addEventListener("input", updateEndDateMinimum);
+    fromInput.addEventListener("change", updateEndDateMinimum);
+
+    updateEndDateMinimum();
+</script>
+</html>
