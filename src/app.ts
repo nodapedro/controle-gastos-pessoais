@@ -5,6 +5,7 @@ import session from "express-session";
 import { env } from "./config/env.js";
 
 import authRoutes from "./modules/auth/auth.routes.js";
+import categoryRoutes from "./modules/categories/category.routes.js";
 import { requireAuth } from "./middlewares/auth.middleware.js";
 
 const app = express();
@@ -38,6 +39,9 @@ app.use(
 
 // Authentication routes
 app.use(authRoutes);
+
+// Protected category routes
+app.use("/categories", requireAuth, categoryRoutes);
 
 // Protected homepage
 app.get("/", requireAuth, (_req, res) => {

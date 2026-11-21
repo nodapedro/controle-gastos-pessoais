@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+</head>
+<body>
+    <h1><%= pageTitle %></h1>
+
+    <% if (error) { %>
+        <p style="color: red;" role="alert"><%= error %></p>
+    <% } %>
+
+    <form action="<%= formAction %>" method="POST">
+        <div>
+            <label for="name">Nome da categoria</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="<%= categoryName %>"
+                maxlength="80"
+                required
+                autofocus
+            >
+        </div>
+
+        <button type="submit"><%= submitLabel %></button>
+        <a href="/categories">Cancelar</a>
+    </form>
+</body>
+</html>

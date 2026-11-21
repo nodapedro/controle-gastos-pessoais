@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas categorias</title>
+</head>
+<body>
+    <h1>Minhas categorias</h1>
+
+    <% if (error) { %>
+        <p style="color: red;" role="alert"><%= error %></p>
+    <% } %>
+
+    <a href="/">Voltar ao início</a>
+    <a href="/categories/new">Nova categoria</a>
+
+    <% if (categories.length === 0) { %>
+        <p>Você ainda não possui categorias cadastradas.</p>
+    <% } else { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% categories.forEach(category => { %>
+                    <tr>
+                        <td><%= category.name %></td>
+
+                        <td>
+                            <a href="/categories/<%= category.id %>/edit">
+                                Editar
+                            </a>
+
+                            <form
+                                action="/categories/<%= category.id %>/delete"
+                                method="POST"
+                                style="display: inline;"
+                                onsubmit="return confirm('Deseja realmente excluir esta categoria?');"
+                            >
+                                <button type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+</body>
+</html>
